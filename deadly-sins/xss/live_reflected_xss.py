@@ -9,11 +9,11 @@ from html import escape
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/hello")
 def hello_world():
     # TODO: change hello world example to echo back the user's name 
     # passed to it as a request parameter
-    n = request.args.get("name")     
+    n = request.args.get("name")
     return render_template("live_reflected_xss.jinja", name=n)
 
 

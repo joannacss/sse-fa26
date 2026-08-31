@@ -19,7 +19,6 @@ class Comment(db.Model):
 @app.route('/add_comment', methods=['POST'])
 def add_comment():
     comment_data = request.form.get("comment")
-    comment_data = escape(comment_data)
     new_comment = Comment(text=comment_data)
     db.session.add(new_comment)
     db.session.commit()

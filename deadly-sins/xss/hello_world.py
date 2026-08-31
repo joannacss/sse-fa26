@@ -18,7 +18,7 @@ def home():
                         <title>Basic example</title>
                     </head>
                     <body>
-                        Homepage!
+                        Homepage!                        
                     </body>
                 </html>
     """
@@ -26,5 +26,5 @@ def home():
 
 @app.route("/hello")
 def hello_world():
-    return render_template("hello.html", name="SSE Fall 2025!")
+    return render_template("hello.html", name="SSE Fall 2026!")
 
