@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from html import escape
 
 app = Flask(__name__)
+#  configures a local SQLite database named comments.db, under `./instance/`
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///comments.db'
 db = SQLAlchemy(app)
 
@@ -15,6 +16,12 @@ class Comment(db.Model):
 
     def __str__(self):
         return self.text
+
+
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+        app.run(debug=True)
 
 @app.route('/add_comment', methods=['POST'])
 def add_comment():
@@ -41,7 +48,4 @@ def delete_comments():
 # So we can use `curl -X DELETE http://127.0.0.1:5000/delete_comments` to delete comments and reset the database
 
 
-if __name__ == "__main__":
-    with app.app_context():
-    	db.create_all()
-    	app.run(debug=True)
+
