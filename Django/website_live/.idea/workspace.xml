@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="57e2c8a9-f5bf-43c0-bb2d-523317a73be1" name="Changes" comment="" />
+    <list default="true" id="57e2c8a9-f5bf-43c0-bb2d-523317a73be1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/blog/templates/blog/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/templates/blog/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blog/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/bfa77f9a-cc2d-4387-9fc8-f419e481c069.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/bfa77f9a-cc2d-4387-9fc8-f419e481c069.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/bfa77f9a-cc2d-4387-9fc8-f419e481c069/storage_v2/_src_/schema/main.uQUzAA.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/website_live/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/website_live/urls.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -103,11 +113,22 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1790006174361</updated>
-      <workItem from="1790006175399" duration="5860000" />
+      <workItem from="1790006175399" duration="7788000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/website_live/urls.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
