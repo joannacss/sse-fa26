@@ -13,12 +13,8 @@ def index(request):
 
 
 def register(request):
-    form = RegisterForm(request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()
-            return HttpResponse("all good, yay")#redirect(reverse("blog:login"))
-    return render(request, "blog/register.html", {"form": form})
+    # TODO lets use forms.py to create a form for user registration
+    return render(request, "blog/register.html")
 
 
 def login(request):
