@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
@@ -16,7 +17,7 @@ def register(request):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect(reverse("blog:login"))
+            return HttpResponse("all good, yay")#redirect(reverse("blog:login"))
     return render(request, "blog/register.html", {"form": form})
 
 

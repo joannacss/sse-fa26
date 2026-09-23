@@ -1,7 +1,7 @@
 import re
 
 from django import forms
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ValidationError
 
 from blog.models import User
@@ -55,3 +55,24 @@ class RegisterForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())
+    def __init__(self, *args, **kwargs):
+        self.user = None  # Initialize user attribute
+
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get("username")
+        password = cleaned_data.get("password")
+        if username and password:
+            try:
+                self.user = User.objects.get(username=username)
+                if not check_password(password, self.user.password):
+                    raise ValidationError("Invalid username or password.")
+            except User.DoesNotExist:
+                raise ValidationError("Invalid username or password.")
+
+        return cleaned_data
