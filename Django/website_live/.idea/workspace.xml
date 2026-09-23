@@ -8,11 +8,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57e2c8a9-f5bf-43c0-bb2d-523317a73be1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/73d0514d-9d7e-446b-b806-f5fc46b3d870.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/73d0514d-9d7e-446b-b806-f5fc46b3d870.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/templates/blog/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/blog/templates/blog/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/templates/blog/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/blog/templates/blog/login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/templates/blog/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/blog/templates/blog/register.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +85,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "copilot.chat.legacySessionMetadata.migrated": "true",
-    "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
+    "django.template.preview.state": "SHOW_EDITOR",
     "git-widget-placeholder": "main",
     "last_opened_file_path": "/Users/joannacss/Documents/Portfolio/GitHub/joannacss/sse-fa26/Django/website_live",
     "node.js.detected.package.eslint": "true",
@@ -136,7 +140,7 @@
       <option name="presentableId" value="Default" />
       <updated>1790006174361</updated>
       <workItem from="1790006175399" duration="9245000" />
-      <workItem from="1790176796074" duration="5204000" />
+      <workItem from="1790176796074" duration="10191000" />
     </task>
     <servers />
   </component>

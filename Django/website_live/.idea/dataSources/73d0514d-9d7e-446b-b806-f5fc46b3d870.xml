@@ -499,7 +499,7 @@
     </routine>
     <schema id="191" parent="1" name="main">
       <Current>1</Current>
-      <LastIntrospectionLocalTimestamp>2026-09-23.16:14:55</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2026-09-23.18:36:12</LastIntrospectionLocalTimestamp>
     </schema>
     <argument id="192" parent="16">
       <ArgumentDirection>R</ArgumentDirection>
@@ -1916,28 +1916,28 @@ permission_id</ColNames>
       <Position>1</Position>
       <StoredType>integer|0s</StoredType>
     </column>
-    <column id="631" parent="562" name="username">
+    <column id="631" parent="562" name="password">
       <NotNull>1</NotNull>
       <Position>2</Position>
-      <StoredType>varchar(200)|0s</StoredType>
-    </column>
-    <column id="632" parent="562" name="password">
-      <NotNull>1</NotNull>
-      <Position>3</Position>
       <StoredType>varchar|0s</StoredType>
     </column>
-    <column id="633" parent="562" name="email">
+    <column id="632" parent="562" name="email">
       <NotNull>1</NotNull>
-      <Position>4</Position>
+      <Position>3</Position>
       <StoredType>varchar(254)|0s</StoredType>
     </column>
+    <column id="633" parent="562" name="username">
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+      <StoredType>varchar(150)|0s</StoredType>
+    </column>
     <index id="634" parent="562" name="sqlite_autoindex_blog_user_1">
-      <ColNames>username</ColNames>
+      <ColNames>email</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
     <index id="635" parent="562" name="sqlite_autoindex_blog_user_2">
-      <ColNames>email</ColNames>
+      <ColNames>username</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Unique>1</Unique>
     </index>
@@ -1946,11 +1946,11 @@ permission_id</ColNames>
       <Primary>1</Primary>
     </key>
     <key id="637" parent="562">
-      <ColNames>username</ColNames>
+      <ColNames>email</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_blog_user_1</UnderlyingIndexName>
     </key>
     <key id="638" parent="562">
-      <ColNames>email</ColNames>
+      <ColNames>username</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_blog_user_2</UnderlyingIndexName>
     </key>
     <check id="639" parent="563">

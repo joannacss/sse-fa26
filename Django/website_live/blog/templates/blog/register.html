@@ -3,10 +3,7 @@
     <h1>User account profile creation</h1>
     <form class="m-auto col-md-3" action="{% url 'blog:register' %}" method="POST">
         {% csrf_token %}
-        <input type="text" name="username" placeholder="Username">
-        <input type="password" name="password1" placeholder="Password">
-        <input type="password" name="password2" placeholder="Confirm Password">
-        <input type="email" name="email" placeholder="Email">
+        {{ form.as_p }}
          <input type="submit" value="Register">
     </form>
 {% endblock %}
