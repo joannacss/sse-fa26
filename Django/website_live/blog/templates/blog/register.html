@@ -1,13 +1,14 @@
-        <htm>
+{% extends "blog/base.html" %}
+{% block body_content %}
+    <h1>User account profile creation</h1>
+    <form class="m-auto col-md-3" action="{% url 'blog:register' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+            <input type="submit" value="Register">
+    </form>
+{% endblock %}
 
-
-            <body>
-
-            <form>
-                <input type="text" name="username" placeholder="Username">
-                <input type="password" name="password" placeholder="Password">
-                <input type = "email" name="email" placeholder="Email">
-                <input type="submit" value="Register">
-            </form>
-            </body>
-        </htm>
+{#        <input type="text" name="username" placeholder="Username">#}
+{#        <input type="password" name="password1" placeholder="Password">#}
+{#        <input type="password" name="password2" placeholder="Confirm Password">#}
+{#        <input type="email" name="email" placeholder="Email">#}

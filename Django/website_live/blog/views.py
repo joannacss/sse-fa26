@@ -1,4 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
+
+from blog.forms import RegisterForm
 
 
 # Create your views here.
@@ -9,11 +12,16 @@ def index(request):
 
 
 def register(request):
-    return render(request, 'blog/register.html')
+    form = RegisterForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("blog:login"))
+    return render(request, "blog/register.html", {"form": form})
 
 
 def login(request):
-    pass
+    return render(request, "blog/login.html")
 
 
 def logout(request):
