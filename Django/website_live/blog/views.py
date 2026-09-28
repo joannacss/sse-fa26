@@ -35,7 +35,8 @@ def login(request):
 
 def logout(request):
     #TODO: wipe the session, redirect to login
-    pass
+    request.session.flush()
+    return redirect(reverse('blog:login'))
 
 
 def create_post(request):
@@ -53,9 +54,12 @@ def create_post(request):
 
 
 def view_post(request, post_id):
-    pass
+    # Post.objects.get(id=post_id)
+    post = get_object_or_404(Post, id=post_id)
+    return render(request, "blog/view.html", {'post': post})
 
 
 
 def list_posts(request):
-    pass
+    posts = Post.objects.all().order_by('-title')
+    return render(request, 'blog/list.html', {'posts': posts})

@@ -61,7 +61,8 @@ class LoginForm(forms.Form):
 
         try:
             user = User.objects.get(username=username)
-            if not check_password(password, user.password): raise ValidationError("Invalid credentials")
+            if not check_password(password, user.password):
+                raise ValidationError("Invalid credentials")
             self.user = user
         except User.DoesNotExist:
             raise ValidationError("Invalid credentials")
