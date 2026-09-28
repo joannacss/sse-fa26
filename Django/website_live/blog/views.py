@@ -49,7 +49,7 @@ def create_post(request):
     if request.method == "POST":
         if form.is_valid():
             post = form.save(commit=False)
-            post.user = user
+            post.user = User.objects.get(username=user)
             post.save()
             return redirect(reverse('blog:list_posts'))
 
