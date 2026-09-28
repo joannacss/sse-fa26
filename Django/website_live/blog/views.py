@@ -1,9 +1,9 @@
 from django.contrib.auth.hashers import check_password
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from blog.models import User
-from blog.forms import RegisterForm, LoginForm
+from blog.models import User, Post
+from blog.forms import RegisterForm, LoginForm, PostForm
 
 
 # Create your views here.
@@ -28,29 +28,39 @@ def login(request):
     form = LoginForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = User.objects.get(username=username)
-            if user and check_password(password, user.password):
-                request.session ['user'] = username
-                return redirect(reverse('blog:index'))
-            else:
-                form.add_error('password', 'Incorrect combination of username/password')
+            request.session.cycle_key()
+            request.session["user"] = form.user.username
+            return redirect(reverse('blog:index'))
 
     return render(request, "blog/login.html", {'form': form})
 
 
 def logout(request):
-    pass
+    #TODO: wipe the session and rotate session key
+    request.session.flush()
+    return redirect(reverse('blog:login'))
 
 
 def create_post(request):
-    pass
+    user = request.get("user", None)
+    if not  user:
+        return redirect("blog:index")
+    form = PostForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = user
+            post.save()
+            return redirect(reverse('blog:list_posts'))
+
+    return render(request, "blog/create.html", {'form': form})
 
 
 def view_post(request, post_id):
-    pass
+    post = get_object_or_404(Post, id=post_id)
+    return render(request, "blog/view.html", {'post': post})
 
 
 def list_posts(request):
-    pass
+    posts = Post.objects.all()
+    return render(request, "blog/list.html", {'posts': posts})

@@ -4,11 +4,12 @@ from django import forms
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ValidationError
 
-from blog.models import User
+from blog.models import User, Post
 
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
@@ -29,13 +30,12 @@ class RegisterForm(forms.ModelForm):
             errors.append('Password must contain at least one lowercase letter')
         if not any(c in "!@#$%^&" for c in pwd):
             errors.append('Password must contain at least one special character (!@#$%^&)')
-        if len(pwd) <8 or len(pwd) >128:
-            errors.append('Password must contain at least 8 characters and less than or equals to 128' )
+        if len(pwd) < 8 or len(pwd) > 128:
+            errors.append('Password must contain at least 8 characters and less than or equals to 128')
 
         # TODO: common passwords
         if errors:
             raise ValidationError(". ".join(errors))
-
 
         return pwd
 
@@ -51,3 +51,25 @@ class LoginForm(forms.Form):
     username = forms.CharField(max_length=150)
     password = forms.CharField(widget=forms.PasswordInput())
 
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        self.user = None
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        try:
+            user = User.objects.get(username=username)
+            if not check_password(password, user.password): raise ValidationError("Invalid credentials")
+            self.user = user
+        except User.DoesNotExist:
+            raise ValidationError("Invalid credentials")
+
+        return self.cleaned_data
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content']
