@@ -36,16 +36,16 @@ import static com.ibm.wala.types.TypeReference.findOrCreate;
  *
  * @author Joanna C. S. Santos
  */
-public class ExampleL15 {
+public class Example2 {
 
     public static void main(String[] args) throws IOException, ClassHierarchyException, CancelException {
         //Create the analysis scope
         AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
-        String jarFilePath = ExampleL15.class.getResource("Example4.jar").getPath();
+        String jarFilePath = Example2.class.getResource("Example4.jar").getPath();
         scope.addToScope(ClassLoaderReference.Application, new JarFile(jarFilePath));
-        String jrePath = ExampleL15.class.getResource("jdk-17.0.1/rt.jar").getPath();
+        String jrePath = Example2.class.getResource("jdk-17.0.1/rt.jar").getPath();
         scope.addToScope(ClassLoaderReference.Primordial, new JarFile(jrePath));
-        String exFilePath = ExampleL15.class.getResource("Java60RegressionExclusions.txt").getPath();
+        String exFilePath = Example2.class.getResource("Java60RegressionExclusions.txt").getPath();
         scope.setExclusions(new FileOfClasses(new FileInputStream(exFilePath)));
 
         // Create the class hierarchy
@@ -57,7 +57,7 @@ public class ExampleL15 {
         options.setEntrypoints(entrypoints);
         SSAPropagationCallGraphBuilder builder = Util.makeNCFABuilder(1, options, new AnalysisCacheImpl(), classHierarchy, scope);
         CallGraph callGraph = builder.makeCallGraph(options, null);
-        ExampleL13.printCallGraph(callGraph, "1-CFA");
+        Example1.printCallGraph(callGraph, "1-CFA");
 
 
         // Get the IR of the main method

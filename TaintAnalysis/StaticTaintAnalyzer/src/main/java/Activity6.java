@@ -1,8 +1,5 @@
-import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.cha.CHACallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
@@ -19,11 +16,11 @@ public class Activity6 {
     public static void main(String[] args) throws IOException, ClassHierarchyException, CallGraphBuilderCancelException {
 
         AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
-        String jarFilePath = ExampleL13.class.getResource("MusicPlayer.jar").getPath();
+        String jarFilePath = Example1.class.getResource("MusicPlayer.jar").getPath();
         scope.addToScope(ClassLoaderReference.Application, new JarFile(jarFilePath));
-        String jrePath = ExampleL13.class.getResource("jdk-17.0.1/rt.jar").getPath();
+        String jrePath = Example1.class.getResource("jdk-17.0.1/rt.jar").getPath();
         scope.addToScope(ClassLoaderReference.Primordial, new JarFile(jrePath));
-        String exFilePath = ExampleL13.class.getResource("Java60RegressionExclusions.txt").getPath();
+        String exFilePath = Example1.class.getResource("Java60RegressionExclusions.txt").getPath();
         scope.setExclusions(new FileOfClasses(new FileInputStream(exFilePath)));
 
         System.out.println("Building class hierarchy!");

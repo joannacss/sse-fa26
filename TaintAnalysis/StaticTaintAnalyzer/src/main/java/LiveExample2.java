@@ -1,4 +1,3 @@
-import com.ibm.wala.cast.tree.impl.CAstNodeTypeMapRecorder;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.*;
@@ -21,7 +20,6 @@ import com.ibm.wala.util.strings.Atom;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -38,16 +36,16 @@ import static com.ibm.wala.types.TypeReference.findOrCreate;
  * - mvn exec:java -Dexec.mainClass=LiveExampleL15
  * @author Joanna C. S. Santos
  */
-public class LiveExampleL15 {
+public class LiveExample2 {
 
     public static void main(String[] args) throws IOException, ClassHierarchyException, CancelException {
         //Create the analysis scope
         AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
-        String jarFilePath = LiveExampleL15.class.getResource("Example4.jar").getPath();
+        String jarFilePath = LiveExample2.class.getResource("Example4.jar").getPath();
         scope.addToScope(ClassLoaderReference.Application, new JarFile(jarFilePath));
-        String jrePath = LiveExampleL15.class.getResource("jdk-17.0.1/rt.jar").getPath();
+        String jrePath = LiveExample2.class.getResource("jdk-17.0.1/rt.jar").getPath();
         scope.addToScope(ClassLoaderReference.Primordial, new JarFile(jrePath));
-        String exFilePath = LiveExampleL15.class.getResource("Java60RegressionExclusions.txt").getPath();
+        String exFilePath = LiveExample2.class.getResource("Java60RegressionExclusions.txt").getPath();
         scope.setExclusions(new FileOfClasses(new FileInputStream(exFilePath)));
 
         // Create the class hierarchy
@@ -59,36 +57,23 @@ public class LiveExampleL15 {
         options.setEntrypoints(entrypoints);
         SSAPropagationCallGraphBuilder builder = Util.makeNCFABuilder(1, options, new AnalysisCacheImpl(), classHierarchy, scope);
         CallGraph callGraph = builder.makeCallGraph(options, null);
-        ExampleL13.printCallGraph(callGraph, "1-CFA");
+        Example1.printCallGraph(callGraph, "1-CFA");
 
 
         // TODO: Compute the SDG of the program (data only)
-        SDG sdg = new SDG(callGraph,
-                builder.getPointerAnalysis(),
-                Slicer.DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS,
-                Slicer.ControlDependenceOptions.NONE);
+//        SDG sdg = new SDG(...);
 
-        System.out.println(sdg.getNumberOfNodes());
+
         // TODO: find sources and sinks
-        Set<Statement> sources = findSources(sdg);
-        Set<Statement> sinks = findSinks(sdg);
-        System.out.println("SOURCES: " + sources);
-        System.out.println("SINKS: " + sinks);
+//        Set<Statement> sources = findSources(sdg);
+//        Set<Statement> sinks = findSinks(sdg);
+//        System.out.println("SOURCES: " + sources);
+//        System.out.println("SINKS: " + sinks);
 
 
         // TODO: slice the SDG and compute a pruned SDG
-        Collection<Statement> statements = Slicer.computeBackwardSlice(sdg, sinks);
-        Graph slicedSdg = GraphSlicer.prune(sdg, s -> statements.contains(s));
-        System.out.println(slicedSdg.getNumberOfNodes());
 
         // TODO: find vulnerable paths
-        Set<List<Statement>> paths = getVulnerablePaths(sdg, sources, sinks);
-        for(List<Statement> path : paths) {
-            System.out.println("PATH: " );
-            for(Statement s : path) {
-                System.out.println("\t"+s);
-            }
-        }
 
         // TODO: print vulnerable paths
 

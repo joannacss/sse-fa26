@@ -21,7 +21,7 @@ import java.util.jar.JarFile;
  *
  * @author Joanna C. S. Santos
  */
-public class ExampleL13 {
+public class Example1 {
 
     public static void printCallGraph(CallGraph cg, String callgraphName) {
         System.out.println("================ " + callgraphName + " call graph ===================");
@@ -46,11 +46,11 @@ public class ExampleL13 {
 
         // TODO: create the analysis scope
         AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
-        String jarFilePath = ExampleL13.class.getResource("Example1.jar").getPath();
+        String jarFilePath = Example1.class.getResource("Example1.jar").getPath();
         scope.addToScope(ClassLoaderReference.Application, new JarFile(jarFilePath));
-        String jrePath = ExampleL13.class.getResource("jdk-17.0.1/rt.jar").getPath();
+        String jrePath = Example1.class.getResource("jdk-17.0.1/rt.jar").getPath();
         scope.addToScope(ClassLoaderReference.Primordial, new JarFile(jrePath));
-        String exFilePath = ExampleL13.class.getResource("Java60RegressionExclusions.txt").getPath();
+        String exFilePath = Example1.class.getResource("Java60RegressionExclusions.txt").getPath();
         scope.setExclusions(new FileOfClasses(new FileInputStream(exFilePath)));
 
         // TODO: create the class hierarchy
@@ -64,12 +64,14 @@ public class ExampleL13 {
         }
 
 
+        // TODO: compute application's entrypoints
+        Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, classHierarchy);
+
         // TODO: create the CHA call graph
         CHACallGraph chaCallGraph = new CHACallGraph(classHierarchy, false);
-        Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, classHierarchy);
         chaCallGraph.init(entrypoints);
         printCallGraph(chaCallGraph, "CHA");
-
+        System.exit(0);
 
         // TODO: create the RTA call graph
         AnalysisOptions options = new AnalysisOptions();
