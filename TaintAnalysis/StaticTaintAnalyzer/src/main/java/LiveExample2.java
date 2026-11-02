@@ -61,12 +61,15 @@ public class LiveExample2 {
 
 
         // TODO: Compute the SDG of the program (data only)
-//        SDG sdg = new SDG(...);
+        SDG sdg = new SDG(callGraph, builder.getPointerAnalysis(),
+                Slicer.DataDependenceOptions.FULL,
+                Slicer.ControlDependenceOptions.NONE);
+        System.out.println(sdg.getNumberOfNodes());
 
 
         // TODO: find sources and sinks
 //        Set<Statement> sources = findSources(sdg);
-//        Set<Statement> sinks = findSinks(sdg);
+        Set<Statement> sinks = findSinks(sdg);
 //        System.out.println("SOURCES: " + sources);
 //        System.out.println("SINKS: " + sinks);
 

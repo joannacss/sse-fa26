@@ -69,6 +69,13 @@ public class Example2 {
 
         // TODO: Compute the SDG of the program (data only)
         SDG sdg = new SDG(callGraph, builder.getPointerAnalysis(), DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS, ControlDependenceOptions.NONE);
+        for(Object s: sdg){
+//            if(s instanceof NormalStatement)
+//                System.out.println(s.getNode());
+            if(s.toString().contains("NORMAL_RET_"))
+                System.out.println(((Statement)s).getKind());
+        }
+
 
         // TODO: find sources and sinks
         Set<Statement> sinks = findSinks(sdg);
@@ -169,35 +176,22 @@ public class Example2 {
      * @param sinks   sink statements
      * @return set of vulnerable paths
      */
-//    public static Set<List<Statement>> getVulnerablePaths(Graph<Statement> G, Set<Statement> sources, Set<Statement> sinks) {
-//        Set<List<Statement>> result = HashSetFactory.make();
-//        for (Statement src : G) {
-//            if (sources.contains(src)) {
-//                for (Statement dst : G) {
-//                    if (sinks.contains(dst)) {
-//                        BFSPathFinder<Statement> paths = new BFSPathFinder<>(G, src, dst);
-//                        List<Statement> path = paths.find();
-//                        if (path != null) {
-//                            result.add(path);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        return result;
-//    }
     public static Set<List<Statement>> getVulnerablePaths(Graph<Statement> G, Set<Statement> sources, Set<Statement> sinks) {
         Set<List<Statement>> result = HashSetFactory.make();
-        for (Statement src : sources) {
-            for (Statement dst: sinks ) {
-                BFSPathFinder<Statement> paths = new BFSPathFinder<>(G, src, dst);
-                List<Statement> path = paths.find();
-                if (path != null) {
-                    result.add(path);
+        for (Statement src : G) {
+            if (sources.contains(src)) {
+                for (Statement dst : G) {
+                    if (sinks.contains(dst)) {
+                        BFSPathFinder<Statement> paths = new BFSPathFinder<>(G, src, dst);
+                        List<Statement> path = paths.find();
+                        if (path != null) {
+                            result.add(path);
+                        }
+                    }
                 }
             }
         }
-
         return result;
     }
+
 }
