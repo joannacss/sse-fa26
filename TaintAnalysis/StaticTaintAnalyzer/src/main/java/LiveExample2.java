@@ -34,9 +34,12 @@ import static com.ibm.wala.types.TypeReference.findOrCreate;
  * Running it from terminal:
  * - mvn compile
  * - mvn exec:java -Dexec.mainClass=LiveExampleL15
+ *
  * @author Joanna C. S. Santos
  */
 public class LiveExample2 {
+
+    private static BFSPathFinder<Statement> finder;
 
     public static void main(String[] args) throws IOException, ClassHierarchyException, CancelException {
         //Create the analysis scope
@@ -68,18 +71,26 @@ public class LiveExample2 {
 
 
         // TODO: find sources and sinks
-//        Set<Statement> sources = findSources(sdg);
+        Set<Statement> sources = findSources(sdg);
         Set<Statement> sinks = findSinks(sdg);
-//        System.out.println("SOURCES: " + sources);
-//        System.out.println("SINKS: " + sinks);
+        System.out.println("SOURCES: " + sources);
+        System.out.println("SINKS: " + sinks);
 
 
         // TODO: slice the SDG and compute a pruned SDG
+        Collection<Statement> backwardSlice = Slicer.computeBackwardSlice(sdg, sinks);
+        Graph<Statement> prunedSdg = GraphSlicer.prune(sdg, s -> backwardSlice.contains(s));
+        System.out.println(prunedSdg.getNumberOfNodes());
 
         // TODO: find vulnerable paths
-
+        Set<List<Statement>> vulnerablePaths = getVulnerablePaths(prunedSdg, sources, sinks);
         // TODO: print vulnerable paths
-
+        for (List<Statement> vulnerablePath : vulnerablePaths) {
+            System.out.println("FOUND PATH of LENGTH " + vulnerablePath.size());
+            for (Statement s : vulnerablePath) {
+                System.out.println("\t" + s);
+            }
+        }
 
     }
 
@@ -107,14 +118,15 @@ public class LiveExample2 {
         // - the array is the program's arguments, ie., `args` (v1)
         Set<Statement> result = new HashSet<>();
         // TODO: iterate over the statements in the SDG to find source(s)
-        for(Statement statement : sdg) {
-            if(isApplicationScope(statement.getNode().getMethod().getDeclaringClass())){
-                if(statement instanceof NormalStatement){ // Alternative: statement.getKind().equals(Statement.Kind.NORMAL
+        for (Statement statement : sdg) {
+            if (isApplicationScope(statement.getNode().getMethod().getDeclaringClass())) {
+                if (statement instanceof NormalStatement) { // Alternative: statement.getKind().equals(Statement.Kind.NORMAL
                     SSAInstruction instruction = ((NormalStatement) statement).getInstruction();
-                    if(instruction instanceof SSAArrayLoadInstruction){
+                    if (instruction instanceof SSAArrayLoadInstruction) {
                         int varNo = instruction.getUse(0);
                         IMethod m = statement.getNode().getMethod();
-                        if(m.getSelector().toString().equals("main([Ljava/lang/String;)V") && varNo == 1){
+                        if (m.getSelector().toString().equals("main([Ljava/lang/String;)V")
+                                && varNo == 1) {
                             result.add(statement);
                         }
                     }
@@ -146,12 +158,12 @@ public class LiveExample2 {
             // - it is within the application scope
             // - it is an invocation (SSAAbstractInvokeInstruction)
             // - the declared target method is equals to `sinkReference` constructed above
-            if(isApplicationScope(s.getNode().getMethod().getDeclaringClass())){
-                if(s instanceof NormalStatement){
+            if (isApplicationScope(s.getNode().getMethod().getDeclaringClass())) {
+                if (s instanceof NormalStatement) {
                     SSAInstruction instruction = ((NormalStatement) s).getInstruction();
-                    if(instruction instanceof SSAAbstractInvokeInstruction){
+                    if (instruction instanceof SSAAbstractInvokeInstruction) {
                         SSAAbstractInvokeInstruction abstractInvoke = (SSAAbstractInvokeInstruction) instruction;
-                        if(abstractInvoke.getDeclaredTarget().equals(sinkReference)){
+                        if (abstractInvoke.getDeclaredTarget().equals(sinkReference)) {
                             result.add(s);
                         }
                     }
@@ -172,10 +184,11 @@ public class LiveExample2 {
     public static Set<List<Statement>> getVulnerablePaths(Graph<Statement> g, Set<Statement> sources, Set<Statement> sinks) {
         Set<List<Statement>> result = HashSetFactory.make();
         for (Statement src : sources) {
-            for(Statement dst : sinks ) {
+            if (!g.containsNode(src)) continue;
+            for (Statement dst : sinks) {
                 BFSPathFinder<Statement> finder = new BFSPathFinder<>(g, src, dst);
                 List<Statement> path = finder.find();
-                while(path != null){
+                while (path != null) {
                     result.add(path);
                     path = finder.find();
                 }
