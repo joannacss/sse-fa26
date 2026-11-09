@@ -22,9 +22,7 @@ def analyze(frame, event, arg):
     for v in local_variables:
         variable_values.append(f"{v} = {local_variables[v]}")
     seen_lines.add(lineno)
-    print(f"{function_name}:{lineno} ({event})")
-    print(f"\t{code_line}")
-    print(f"\t\t{variable_values}")
+    print(f"({event}) {function_name}:{lineno} {code_line}\t{variable_values}")
 
     return analyze
 
@@ -33,7 +31,6 @@ def main():
 
     # generate inputs: hint: use the random module
     # generate input iteratively, until all of triangle's code lines are executed
-    # E-mail subject: Lecture 16 - Extra Credit (2PM)
     triangle(2, 2, 1)
     while len(seen_lines) < 10:
         a = random.randint(1, 11)
@@ -42,6 +39,7 @@ def main():
         sys.settrace(analyze)
         triangle(a, b, c)
         sys.settrace(None)
+        print("---------------------------------")
     print(seen_lines)
     print("DONE")
 
