@@ -1,10 +1,10 @@
 # Code retrieved from the Fuzzing Book (https://www.fuzzingbook.org/)
-
 def triangle(a, b, c):
     if a == b:
         if b == c:
             return 'equilateral'
         else:
+            c = 10
             return 'isosceles #1'
     else:
         if b == c:
