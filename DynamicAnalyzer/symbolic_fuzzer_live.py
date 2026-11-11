@@ -94,22 +94,14 @@ def main():
 	for i, state in enumerate(path_tree, start=1):
 		print(f"Path {i}: ", state.constraints)
 		# TODO create Z3 symbols for each variable in the store
-		symbols = {name: z3.Int(name) for name in state.store}
+
 		# TODO create a Z3 constraint for the path
-		path_constraints = ",".join(state.constraints)
-		constraint = f"z3.And({path_constraints})"
+
 
 		# TODO: create a Z3 solver and add the constraints for the path
-		solver = z3.Solver()
-		solver.add(eval(constraint, {"z3": z3}, symbols))
+
 		# TODO: check if the constraints are satisfiable and print the result (if SAT)
-		result = solver.check()
-		if result == z3.sat:
-			print("Satisfiable!", solver.model())
-		elif result == z3.unsat:
-			print("Unsatisfiable!")
-		else:
-			print("Unknown:", solver.reason_unknown())
+
 
 
 if __name__ == '__main__':
