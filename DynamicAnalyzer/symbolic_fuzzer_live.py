@@ -1,71 +1,115 @@
 # Code based on the code from the FuzzingBook.org
+# But modified to match the explanation in the slides
+
 import ast
+import copy
 import inspect
+import textwrap
 import z3
+
 from examples.twice import test
 
 
-def collect_conditions(tree):
-	paths = []
+class State:
+	def __init__(self, stmt, store, constraints):
+		self.stmt = stmt
+		# Maps variable names to symbolic expressions (AST nodes).
+		self.store = store
+		self.constraints = constraints
 
-	def traverse_if_children(children, context, cond):
-		previous_len = len(paths)
-		for child in children:
-			traverse(child, context + [cond])
-		if len(paths) == previous_len:
-			paths.append(context + [cond])
+	def branch(self, stmt, condition):
+		return State(stmt, self.store.copy(), self.constraints + [condition])
 
-	def traverse(node, context):
-		# method call, loops, ...
-		if isinstance(node, ast.Call):
-			# the actual dispatch
-			pass
+
+class SymbolicStore(ast.NodeTransformer):
+	def __init__(self, store):
+		self.store = store
+
+	def visit_Name(self, node):
+		# Stored expressions already refer to the values at assignment time.
+		return copy.deepcopy(self.store.get(node.id, node))
+
+
+class StateManager:
+	def __init__(self, f_ast):
+		self.function_ast = f_ast
+		self.states = []  # One final state per collected path.
+
+	def build_tree(self):
+		initial_state = State(self.function_ast, {}, [])
+		self.states = self.traverse(initial_state)
+		return self.states
+
+	def symbolic_expression(self, expression, store):
+		return SymbolicStore(store).visit(copy.deepcopy(expression))
+
+	def traverse(self, state):
+		node = state.stmt
+		if isinstance(node, ast.Module):
+			return self.traverse_statements(node.body, state)
+		if isinstance(node, ast.FunctionDef):
+			# Each input starts as an unknown symbolic value with its own name.
+			for parameter in node.args.posonlyargs + node.args.args + node.args.kwonlyargs:
+				name = parameter.arg
+				state.store[name] = ast.Name(id=name, ctx=ast.Load())
+			return self.traverse_statements(node.body, state)
+		if isinstance(node, ast.Assign):
+			value = self.symbolic_expression(node.value, state.store)
+			for target in node.targets:
+				if not isinstance(target, ast.Name):
+					raise NotImplementedError("Only assignments to variable names are supported")
+				state.store[target.id] = value
 		elif isinstance(node, ast.If):
-			cond = ast.unparse(node.test).strip()
-			not_cond = f"({cond}) == False" #TODO: show alternative with Z3 syntax
-			traverse_if_children(node.body, context, cond)
-			traverse_if_children(node.orelse, context, not_cond)
-		else:
-			for child in ast.iter_child_nodes(node):
-				traverse(child, context)
+			condition = ast.unparse(self.symbolic_expression(node.test, state.store))
+			true_states = self.traverse_branch(node.body, state, condition)
+			false_states = self.traverse_branch(node.orelse, state, f"({condition}) == False")
+			return true_states + false_states
+		return [state]
 
-	traverse(tree, [])
+	def traverse_statements(self, statements, state):
+		states = [state]
+		for stmt in statements:
+			next_states = []
+			for current in states:
+				# A returned path does not execute subsequent statements.
+				if isinstance(current.stmt, ast.Return):
+					next_states.append(current)
+				else:
+					current.stmt = stmt
+					next_states.extend(self.traverse(current))
+			states = next_states
+		return states
 
-    # TODO: replace with Z3 syntax
-	constraints = []
-	for i in range(len(paths)):
-		path = ",".join(paths[i])
-		constraints.append(f"z3.And({path})")
-
-	return constraints
-
-
-
+	def traverse_branch(self, statements, state, condition):
+		branch_state = state.branch(None, condition)
+		return self.traverse_statements(statements, branch_state)
 
 
 def main():
-	function_source = inspect.getsource(test)
+	function_source = textwrap.dedent(inspect.getsource(test))
 	function_ast = ast.parse(function_source)
-	paths = collect_conditions(function_ast)
+	manager = StateManager(function_ast)
+	path_tree = manager.build_tree()
 
-	for i in range(len(paths)):
-		print(f"Path {i + 1}", paths[i])
-		# TODO: use z3 solver to find inputs that satisfy the path condition
-		x = z3.Int('x')
-		y = z3.Int('y')
-		z = z3.Int('z')
+	for i, state in enumerate(path_tree, start=1):
+		print(f"Path {i}: ", state.constraints)
+		# TODO create Z3 symbols for each variable in the store
+		symbols = {name: z3.Int(name) for name in state.store}
+		# TODO create a Z3 constraint for the path
+		path_constraints = ",".join(state.constraints)
+		constraint = f"z3.And({path_constraints})"
 
-
+		# TODO: create a Z3 solver and add the constraints for the path
 		solver = z3.Solver()
-		solver.add(z3.And(eval(paths[i]), z == 2*y))#eval(paths[i]))
-
-		if solver.check() == z3.sat:
-			print(f"Solution: {solver.model()}")
+		solver.add(eval(constraint, {"z3": z3}, symbols))
+		# TODO: check if the constraints are satisfiable and print the result (if SAT)
+		result = solver.check()
+		if result == z3.sat:
+			print("Satisfiable!", solver.model())
+		elif result == z3.unsat:
+			print("Unsatisfiable!")
 		else:
-			print(f"UNSAT")
-
-
-
+			print("Unknown:", solver.reason_unknown())
 
 
 if __name__ == '__main__':
