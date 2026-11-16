@@ -20,6 +20,8 @@ class State:
 	def branch(self, stmt, condition):
 		return State(stmt, self.store.copy(), self.constraints + [condition])
 
+	def __str__(self):
+		return str(self.stmt) + " | Store: " + str(self.store) + " | Constraints: " + str(self.constraints)
 
 class SymbolicStore(ast.NodeTransformer):
 	def __init__(self, store):
@@ -94,9 +96,29 @@ def main():
 	for i, state in enumerate(path_tree, start=1):
 		print(f"Path {i}: ", state.constraints)
 		# TODO create Z3 symbols for each variable in the store
-
+		symbols = { name: z3.Int(name) for name in  state.store  }
+		print("\t",symbols)
 		# TODO create a Z3 constraint for the path
+		path_constraints = ",".join(state.constraints)
+		constraint_z3 = f"z3.And({path_constraints})"
+		print("\t",constraint_z3)
+		solver = z3.Solver()
+		solver.add(eval(constraint_z3, {"z3": z3},symbols))
+		result = solver.check()
+		if result == z3.sat:
+			solution = solver.model()
+			x, y = symbols['x'], symbols['y']
+			print(f"\t\tSAT: x = {solution[x]}, y = {solution[y]}")
+			print(test(x, y))
 
+
+
+
+
+
+
+
+		# solver.add(z3.And())
 
 		# TODO: create a Z3 solver and add the constraints for the path
 
