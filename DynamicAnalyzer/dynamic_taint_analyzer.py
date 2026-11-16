@@ -1,6 +1,4 @@
 # coding=utf8
-import ast
-import inspect
 import linecache
 import re
 import sys
@@ -33,7 +31,6 @@ class TaintAnalyzer:
         # TODO: mark generated inputs as tainted
         self.mark_as_tainted(tainted_input1)
         self.mark_as_tainted(tainted_input2)
-
 
     def check_taint(self, frame, event, arg, code_line):
         # TODO: checks whether a tainted variable reached a sink!
