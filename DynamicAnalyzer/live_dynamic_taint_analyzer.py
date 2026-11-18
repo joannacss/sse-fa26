@@ -12,24 +12,30 @@ class TaintAnalyzer:
 
     def __init__(self):
         # TODO: initialize the analyzer
-        pass
+        self.tainted_variables = set()
+        self.inputs = []
+        self.vulnerable_paths = []
 
 
     def mark_as_tainted(self, var):
         # TODO: mark a specific variable as tainted
-        pass
+        self.tainted_variables.add(id(var))
 
 
     def generate_inputs(self):
         # TODO: generates inputs (hardcoded)
-
+        input1 = "ls"
+        input2 = "echo 'Executed Tainted Input'"
+        self.inputs.append(input1)
+        self.inputs.append(input2)
         # TODO: mark generated inputs as tainted
-        pass
+        self.mark_as_tainted(input1)
+        self.mark_as_tainted(input2)
 
     def check_taint(self, frame, event, arg, code_line):
         # TODO: checks whether a tainted variable reached a sink!
-        pass
-
+        if event == "line":
+            # is the executed line a sink?
 
     def run(self):
         # Tracer function
@@ -45,13 +51,15 @@ class TaintAnalyzer:
             return tracer
 
         # TODO: generate inputs
-
+        self.generate_inputs()
         # TODO: run the tracer for each input
-
-
-
+        for input in self.inputs:
+            sys.settrace(tracer)
+            execute_cmd(input)
+            sys.settrace(None)
 
         # TODO: return the vulnerable paths
+        return self.vulnerable_paths
 
 
 
