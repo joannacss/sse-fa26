@@ -15,6 +15,7 @@ class TaintAnalyzer:
         self.tainted_variables = set()
         self.inputs = []
         self.vulnerable_paths = []
+        self.current_path = []
 
 
     def mark_as_tainted(self, var):
@@ -36,6 +37,12 @@ class TaintAnalyzer:
         # TODO: checks whether a tainted variable reached a sink!
         if event == "line":
             # is the executed line a sink?
+            m = SINK_REGEX.match(code_line)
+            if m:
+                var_name = m.group(1)
+                var_id = id(frame.f_locals[var_name])
+                if var_id in self.tainted_variables:
+                    self.vulnerable_paths.append(self.current_path)
 
     def run(self):
         # Tracer function
