@@ -26,14 +26,14 @@ public class Main3 {
     public static Object load(String filename) throws IOException, ClassNotFoundException {
         File f = new File(filename);
         if (!f.exists()) return null;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
+        try (ObjectInputStream ois = new LookAheadObjectInputStream(new FileInputStream(f))) {
             return ois.readObject();
         }
     }
 
     public static void main(String[] args) throws Exception {
-        String filename = "exploit.txt"; // benign: my_note.txt
-        Object o = load("exploit.txt");
+        String filename = "my_note.txt"; // benign: my_note.txt
+        Object o = load(filename);
         System.out.println(o);
     }
 }
