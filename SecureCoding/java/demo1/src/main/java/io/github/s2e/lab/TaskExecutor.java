@@ -12,6 +12,5 @@ public class TaskExecutor implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        throw new RuntimeException("HERE");
     }
 }

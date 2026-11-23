@@ -26,18 +26,14 @@ public class Main3 {
     public static Object load(String filename) throws IOException, ClassNotFoundException {
         File f = new File(filename);
         if (!f.exists()) return null;
-        try (ObjectInputStream ois = new LookAheadObjectInputStream(new FileInputStream(f))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f))) {
             return ois.readObject();
         }
     }
 
     public static void main(String[] args) throws Exception {
-//        TaskExecutor te = new TaskExecutor();
-//        CommandTask ct = new CommandTask(te, "open -a Calculator");
-//        CacheManager cm = new CacheManager(ct, "macOS", 0);
-
-//        save("exploit.txt", cm);
-        Object o = load("my_note.txt");
+        String filename = "exploit.txt"; // benign: my_note.txt
+        Object o = load("exploit.txt");
         System.out.println(o);
     }
 }

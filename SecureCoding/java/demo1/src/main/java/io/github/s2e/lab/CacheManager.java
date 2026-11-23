@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class CacheManager implements Serializable {
 
-    private transient Runnable r;
+    private Runnable r;
     private String os;
     private long timestamp;
 
